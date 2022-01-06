@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>try</title>
+    <script src="https://kit.fontawesome.com/9a416a1cca.js" crossorigin="anonymous"></script>
+    <!-- leaflet-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <script src='js/tpcounty_epsg4326_wsg84.geojson.js'></script>
+    <script src='js/tp_epsg4326_wsg84.geojson.js'></script>
+
+    <link href='styles/try.css' rel="stylesheet">
+</head>
+
+<body>
+    <div id="mapcontainer">
+        <div id="map"></div>
+    </div>
+    <input type="checkbox" name="" id="side-menu-switch">
+    <div class="side-menu">
+
+        <form action="">
+            <input type="text" placeholder="Search For">
+            <button>
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+        <nav>
+            <a href="#"><i class="fas fa-gavel"></i>lorem</a>
+            <a href="#"><i class="fas fa-gavel"></i>lorem</a>
+            <a href="#"><i class="fas fa-gavel"></i>lorem</a>
+            <a href="#"><i class="fas fa-gavel"></i>lorem</a>
+            <a href="#"><i class="fas fa-gavel"></i>lorem</a>
+        </nav>
+        <label for="side-menu-switch">
+            <i class="fas fa-angle-left"></i>
+        </label>
+    </div>
+
+    <script type="text/javascript">
+        /*------------------------------
+         建立 Leaflet 地圖
+         設定經緯度座標
+        ------------------------------*/
+        var map = L.map('map').setView([25.073161, 121.547241], 10);
+
+        /*------------------------------
+        底圖    ({z}:地圖的zoom等級 {y}:圖磚的y座標  {x}:圖磚的x座標)
+        .addTo(map) 要直接show在寫，不然可以不用寫，用layercontrol去控制
+        ------------------------------*/
+        var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            // errorTilrUrl: 'http://bpic.588ku.com/element_pic/16/12/07/706f7ff4f15725b17ba1d30d384e6468.jpg',
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,   // 越大可以看越細
+            minZoom: 1,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoidmlsaW5tYXAiLCJhIjoiY2t4YWw0NWliMm5qZDMycGwzbzRjNXdocSJ9.3fV6NzKckNEXIYSKLvoRCg'
+        })
+        // .addTo(map); 
+
+        // jawg.light(特色:區有標示、偏黑白)
+        var Jawg_Light = L.tileLayer('https://{s}.tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
+            attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            minZoom: 1,
+            maxZoom: 18,
+            subdomains: 'abcd',
+            accessToken: 'H3c3Lf2Rd6b6dXG1xQg52qfezonci2s4axiDopO3BcNFQObSdXXQeaQdQOc9uUK7'
+        }).addTo(map);
+
+        // esri.worldtopomap (特色:區有明顯標示)
+        var Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+        })
+        // .addTo(map); 
+
+
+        /*------------------------------
+        畫圈圈
+        ------------------------------*/
+        var circle1 = L.circle([25.032806, 121.523724], { radius: 200 }).addTo(map);
+        //滑鼠觸發 (隨便哪邊點都會觸發)
+        map.on('click', function (ev) {
+            // alert(ev.latlng); // ev is an event object (MouseEvent in this case)
+            circle1.setLatLng([25.030806, 121.523724])
+        });
+        // 加入圖框框
+        var circle = L.circle([25.028995, 121.536083], {
+            color: 'red',
+            fillColor: 'blue',
+            fillOpacity: 1.0,
+            radius: 500
+        }).addTo(map);
+
+
+        /*------------------------------
+        地點圖標 + 圖標功能 options
+        ------------------------------*/
+        var marker1 = L.marker([25.038995, 121.556083]).addTo(map);
+        // 圖標功能 
+        var marker2 = L.marker([25.028995, 121.536083], {
+            draggable: true,  //可拖曳
+            autoPan: true,    //開啟自動平移效果
+            autoPanPadding: [50, 50],   //設定啟動平移時與邊界的距離<預設50,50>
+            autoPanSpeed: 25,   //一次移動的pixel數量<預設10>
+            opacity: 0.5
+        }).addTo(map);
+
+        var polygon1 = L.polygon([
+            [[25.038366, 121.517909], [25.035391, 121.52426], [25.032553, 121.522415], [25.035022, 121.5169], [25.038366, 121.517909]],
+            [[25.034303, 121.520634], [25.033583, 121.522157], [25.034905, 121.522908], [25.035625, 121.521428], [25.034303, 121.520634]]
+        ]).addTo(map)
+
+        //畫矩形(給對角線座標即可)
+        L.rectangle([
+            [25.014684, 121.562347],
+            [25.009706, 121.568527]
+        ]).addTo(map);
+
+        L.geoJSON(tp_wsg84).addTo(map)
+        L.geoJSON(tpcounty_wsg84).addTo(map)
+
+        // 產生layer管理
+        L.control.layers({
+            "mapbox": mapbox,
+            "Jawg_Light": Jawg_Light,
+            "Esri_WorldTopoMap": Esri_WorldTopoMap
+        }, {
+            "liberty square": polygon1
+        }).addTo(map);
+
+        //比例尺
+        L.control.scale({
+            maxWidth: 100,
+            metric: true,
+            imperial: true,
+            position: 'bottomright'
+        }).addTo(map)
+
+        var x = L.LineUtil.pointToSegmentDistance([225.035839, 121.679764], [25.00535, 121.670837], [25.031484, 121.79306])
+        console.log(x)
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+
+nav{
+    background-color: black;
+    text-align: center;
+    font-size: 0; /* 字跟字之間不要有空格 , 也就是說空白字元 = 0 */
+    
+}
+a{
+    display: inline-block; /*佔滿整整*/
+    text-decoration: none; /*超取消連結的下底線*/
+    padding: 10px 10px; /*上左下右*/
+    /* margin-top:5px; 用margin會有空個出現,所以用padding 就好
+    margin-bottom: 5px; */
+    color: white;
+    /* background-color: black; */
+    transition: 1.0s; /*hover 出現的時間 微動畫的感覺*/
+    font-size: 20px;/*字體大小*/
+    
+}
+nav a:hover{
+    background-color: orange;
+}
